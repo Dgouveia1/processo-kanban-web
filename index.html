@@ -1,24 +1,283 @@
+
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>processo-kanban-web</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdvogaSystem - Sistema Jurídico</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Tela de Login -->
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <i class="fas fa-balance-scale"></i>
+                    <h1>AdvogaSystem</h1>
+                    <p>Sistema de Gestão Jurídica</p>
+                </div>
+                
+                <form id="loginForm" class="login-form">
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="loginEmail" placeholder="E-mail" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="loginPassword" placeholder="Senha" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Entrar</button>
+                </form>
+                
+                <div class="login-footer">
+                    <p>Não tem conta? <a href="#" onclick="showRegisterForm()">Cadastre-se</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <meta property="og:title" content="processo-kanban-web" />
-    <meta property="og:description" content="Lovable Generated Project" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <!-- Tela de Cadastro -->
+    <div id="registerScreen" class="screen">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <i class="fas fa-user-plus"></i>
+                    <h1>Novo Cadastro</h1>
+                    <p>Crie sua conta no sistema</p>
+                </div>
+                
+                <form id="registerForm" class="login-form">
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="registerName" placeholder="Nome completo" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="registerEmail" placeholder="E-mail" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-id-card"></i>
+                        <input type="text" id="registerOAB" placeholder="Número da OAB" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="registerPassword" placeholder="Senha" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Cadastrar</button>
+                </form>
+                
+                <div class="login-footer">
+                    <p>Já tem conta? <a href="#" onclick="showLoginForm()">Faça login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+    <!-- Sistema Principal -->
+    <div id="mainSystem" class="screen">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="header-left">
+                <i class="fas fa-balance-scale"></i>
+                <h1>AdvogaSystem</h1>
+            </div>
+            <div class="header-right">
+                <span id="userWelcome">Bem-vindo!</span>
+                <button onclick="logout()" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+        </header>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+        <!-- Navegação -->
+        <nav class="main-nav">
+            <button class="nav-btn active" onclick="showSection('dashboard')">
+                <i class="fas fa-chart-pie"></i> Dashboard
+            </button>
+            <button class="nav-btn" onclick="showSection('kanban')">
+                <i class="fas fa-columns"></i> Processos
+            </button>
+            <button class="nav-btn" onclick="showSection('financial')">
+                <i class="fas fa-dollar-sign"></i> Financeiro
+            </button>
+            <button class="nav-btn" onclick="showSection('search')">
+                <i class="fas fa-search"></i> Busca
+            </button>
+        </nav>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <!-- Dashboard -->
+            <section id="dashboard" class="content-section active">
+                <h2>Dashboard - Resumo dos Processos</h2>
+                <div class="dashboard-cards">
+                    <div class="dashboard-card analysis">
+                        <div class="card-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Em Análise</h3>
+                            <span class="card-number" id="countAnalysis">12</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-card distributed">
+                        <div class="card-icon">
+                            <i class="fas fa-share-alt"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Distribuído</h3>
+                            <span class="card-number" id="countDistributed">8</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-card hearing">
+                        <div class="card-icon">
+                            <i class="fas fa-gavel"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Em Audiência</h3>
+                            <span class="card-number" id="countHearing">5</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-card sentenced">
+                        <div class="card-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Sentenciado</h3>
+                            <span class="card-number" id="countSentenced">15</span>
+                        </div>
+                    </div>
+                    <div class="dashboard-card archived">
+                        <div class="card-icon">
+                            <i class="fas fa-archive"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Arquivado</h3>
+                            <span class="card-number" id="countArchived">23</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Kanban de Processos -->
+            <section id="kanban" class="content-section">
+                <h2>Gestão de Processos - Kanban</h2>
+                <div class="kanban-board">
+                    <div class="kanban-column" data-stage="analysis">
+                        <h3>Em Análise</h3>
+                        <div class="kanban-cards" id="kanban-analysis"></div>
+                    </div>
+                    <div class="kanban-column" data-stage="distributed">
+                        <h3>Distribuído</h3>
+                        <div class="kanban-cards" id="kanban-distributed"></div>
+                    </div>
+                    <div class="kanban-column" data-stage="hearing">
+                        <h3>Em Audiência</h3>
+                        <div class="kanban-cards" id="kanban-hearing"></div>
+                    </div>
+                    <div class="kanban-column" data-stage="sentenced">
+                        <h3>Sentenciado</h3>
+                        <div class="kanban-cards" id="kanban-sentenced"></div>
+                    </div>
+                    <div class="kanban-column" data-stage="archived">
+                        <h3>Arquivado</h3>
+                        <div class="kanban-cards" id="kanban-archived"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção Financeira -->
+            <section id="financial" class="content-section">
+                <h2>Controle Financeiro</h2>
+                <div class="financial-summary">
+                    <div class="financial-card paid" onclick="filterFinancial('paid')">
+                        <div class="card-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Pagos</h3>
+                            <span class="card-value">R$ 45.320,00</span>
+                        </div>
+                    </div>
+                    <div class="financial-card pending" onclick="filterFinancial('pending')">
+                        <div class="card-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Pendentes</h3>
+                            <span class="card-value">R$ 12.800,00</span>
+                        </div>
+                    </div>
+                    <div class="financial-card overdue" onclick="filterFinancial('overdue')">
+                        <div class="card-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Atrasados</h3>
+                            <span class="card-value">R$ 3.250,00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="financial-table-container">
+                    <table class="financial-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Cliente</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th>Pagamento</th>
+                            </tr>
+                        </thead>
+                        <tbody id="financialTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Busca Avançada -->
+            <section id="search" class="content-section">
+                <h2>Busca Avançada</h2>
+                <div class="search-container">
+                    <div class="search-form">
+                        <div class="search-field">
+                            <label for="searchCPF">Buscar por CPF:</label>
+                            <input type="text" id="searchCPF" placeholder="Digite o CPF do cliente">
+                            <button onclick="searchByCPF()" class="btn-search">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                        <div class="search-field">
+                            <label for="searchOAB">Buscar por OAB:</label>
+                            <input type="text" id="searchOAB" placeholder="Digite o número da OAB">
+                            <button onclick="searchByOAB()" class="btn-search">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+                    <div id="searchResults" class="search-results"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal de Detalhes do Processo -->
+    <div id="processModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Detalhes do Processo</h2>
+            <div id="processDetails"></div>
+            <div class="modal-actions">
+                <button onclick="editProcess()" class="btn-edit">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+                <button onclick="closeModal()" class="btn-cancel">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
 </html>
