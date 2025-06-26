@@ -4,6 +4,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import type { User } from '@supabase/supabase-js';
+import { Dashboard } from './Dashboard';
+import { ProcessesKanban } from './ProcessesKanban';
+import { FinancialDashboard } from './FinancialDashboard';
 
 interface MainSystemProps {
   user: User;
@@ -30,6 +33,26 @@ export const MainSystem: React.FC<MainSystemProps> = ({ user, onLogout }) => {
         description: error.message,
         variant: "destructive",
       });
+    }
+  };
+
+  const renderContent = () => {
+    switch (activeSection) {
+      case 'dashboard':
+        return <Dashboard />;
+      case 'kanban':
+        return <ProcessesKanban />;
+      case 'financial':
+        return <FinancialDashboard />;
+      case 'search':
+        return (
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Busca Avançada</h2>
+            <p className="text-gray-600">Funcionalidade de busca será implementada em breve...</p>
+          </div>
+        );
+      default:
+        return <Dashboard />;
     }
   };
 
@@ -88,53 +111,7 @@ export const MainSystem: React.FC<MainSystemProps> = ({ user, onLogout }) => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        {activeSection === 'dashboard' && (
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Dashboard - Resumo dos Processos</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-              {[
-                { title: 'Em Análise', count: 12, color: 'bg-yellow-500', icon: '🔍' },
-                { title: 'Distribuído', count: 8, color: 'bg-blue-500', icon: '📤' },
-                { title: 'Em Audiência', count: 5, color: 'bg-purple-500', icon: '⚖️' },
-                { title: 'Sentenciado', count: 15, color: 'bg-green-500', icon: '📄' },
-                { title: 'Arquivado', count: 23, color: 'bg-gray-500', icon: '📦' },
-              ].map((card) => (
-                <div key={card.title} className="bg-white rounded-lg shadow p-6">
-                  <div className="flex items-center">
-                    <div className={`${card.color} rounded-full p-3 mr-4`}>
-                      <span className="text-white text-xl">{card.icon}</span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">{card.title}</p>
-                      <p className="text-2xl font-bold text-gray-900">{card.count}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {activeSection === 'kanban' && (
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Gestão de Processos - Kanban</h2>
-            <p className="text-gray-600">Funcionalidade de Kanban será implementada em breve...</p>
-          </div>
-        )}
-
-        {activeSection === 'financial' && (
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Controle Financeiro</h2>
-            <p className="text-gray-600">Funcionalidade financeira será implementada em breve...</p>
-          </div>
-        )}
-
-        {activeSection === 'search' && (
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Busca Avançada</h2>
-            <p className="text-gray-600">Funcionalidade de busca será implementada em breve...</p>
-          </div>
-        )}
+        {renderContent()}
       </main>
     </div>
   );
